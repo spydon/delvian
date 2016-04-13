@@ -1,6 +1,8 @@
+package modules
+
 import io.scalac.slack.MessageEventBus
 import io.scalac.slack.bots.AbstractBot
-import io.scalac.slack.common.{BaseMessage, Command, OutboundMessage}
+import io.scalac.slack.common.{Command, OutboundMessage}
 
 class Calc(override val bus: MessageEventBus) extends AbstractBot {
 
@@ -22,7 +24,7 @@ class Calc(override val bus: MessageEventBus) extends AbstractBot {
 
       val response = op.map(f => {
         val result = args.map(_.toDouble).reduceLeft( f(_,_) )
-        OutboundMessage(message.channel, s"Results is: $result")
+        OutboundMessage(message.channel, s"Result is: $result")
       }).getOrElse(OutboundMessage(message.channel, s"No operation $operation"))
 
       publish(response)

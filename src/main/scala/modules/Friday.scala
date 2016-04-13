@@ -1,13 +1,14 @@
+package modules
+
 import io.scalac.slack.MessageEventBus
 import io.scalac.slack.bots.AbstractBot
 import io.scalac.slack.common.{Command, OutboundMessage}
 import org.joda.time.DateTime
-import org.joda.time.Days
 
 class Friday(override val bus: MessageEventBus) extends AbstractBot {
   val r = scala.util.Random
   val fridayMessages =
-    List("IT IS!!!", "Trevlig helg", "Friday, it is!", "Have a great weekend", "See you on monday",
+    List("IT IS!!!", "Trevlig helg", "modules.Friday, it is!", "Have a great weekend", "See you on monday",
     ":beers:", ":rebeccablack:")
 
   val sadMessages =
