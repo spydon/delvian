@@ -2,7 +2,7 @@ import io.scalac.slack.MessageEventBus
 import io.scalac.slack.bots.AbstractBot
 import io.scalac.slack.common.{BaseMessage, Command, OutboundMessage}
 
-class CalculatorBot(override val bus: MessageEventBus) extends AbstractBot {
+class Calc(override val bus: MessageEventBus) extends AbstractBot {
 
   override def help(channel: String): OutboundMessage =
     OutboundMessage(channel,

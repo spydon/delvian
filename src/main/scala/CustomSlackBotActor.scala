@@ -19,7 +19,6 @@ class CustomSlackBotActor(modules: BotModules, eventBus: MessageEventBus, websoc
 
   override def receive: Receive = {
     case Start =>
-      //test connection
       log.info("Trying to connect to Slack server...")
       api ! ApiTest()
 
