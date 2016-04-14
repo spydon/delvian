@@ -22,7 +22,7 @@ class UrlSaver(override val bus: MessageEventBus) extends AbstractBot {
   implicit val timeOut: Timeout = 1 second
 
   val helpMsg =
-    "`$url add key(s) url` saves the url with the key(s) as lookup keys\\n" +
+    "`$url add url key(s)` saves the url with the key(s) as lookup keys\\n" +
     "`$url key` gets the urls associated with the key"
 
   def writeUrl(keys: List[String], url: String): String = {
