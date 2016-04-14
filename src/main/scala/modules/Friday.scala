@@ -7,6 +7,7 @@ import org.joda.time.DateTime
 
 class Friday(override val bus: MessageEventBus) extends AbstractBot {
   val r = scala.util.Random
+  var lastTs = "" //TODO: Fix ugly hack to remove duplicate answers
   val fridayMessages =
     List("IT IS!!!", "Trevlig helg :partyparrot:", "Friday, it is!", "Have a great weekend", "See you on monday!",
          ":beers:", ":rebeccablack:", ":partyparrot:", ":party:")
@@ -49,11 +50,19 @@ class Friday(override val bus: MessageEventBus) extends AbstractBot {
   }
 
   override def act: Receive = {
-    case Command(command, args, message) if (command :: args).foldLeft(false)((acc, c) => acc || trigger(c)) =>
+    case Command(command, args, message) if (command :: args).foldLeft(false)((acc, c) => acc || trigger(c)) && message.ts != lastTs =>
+      lastTs = message.ts //TODO: Fix ugly hack to remove duplicate answers
       val notNumber = (command :: args).foldLeft(0)((acc, c) => acc + (if(c.toLowerCase == "not") 1 else 0))
       val result = if(notNumber > 0) notMessage(notNumber) else resultMessage()
       val response = OutboundMessage(message.channel, s"$result")
 
       publish(response)
+
+    case Command("help", _, message) =>
+      val helpMsg = "Say `Friday` in your mother tongue and it will trigger a friday check"
+      val response = OutboundMessage(message.channel, s"$helpMsg")
+
+      publish(response)
   }
+
 }
