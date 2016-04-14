@@ -6,26 +6,23 @@ import io.scalac.slack.common.{Command, OutboundMessage}
 import org.joda.time.DateTime
 
 class Friday(override val bus: MessageEventBus) extends AbstractBot {
-  val r = scala.util.Random
   var lastTs = "" //TODO: Fix ugly hack to remove duplicate answers
   val fridayMessages =
-    List("IT IS!!!", "Trevlig helg :partyparrot:", "Friday, it is!", "Have a great weekend", "See you on monday!",
-         ":beers:", ":rebeccablack:", ":partyparrot:", ":party:")
+    List("IT IS!!!", "Trevlig helg :partyparrot:", "Friday, it is! :yoda:", "Have a great weekend",
+         "See you on monday!", ":beers:", ":rebeccablack:", ":partyparrot:", ":party:",
+         "Yup! What are you going to do with all that free time?!", "Damn right it is! :smile:", "JAA, DAS IST KLAR!",
+         "Do you want it to be friday? In that case I guess it is.")
 
   val sadMessages =
     List("Trevlig vardag", "Unfortunately not", "Doesn't matter...", "Still a bit to go", "NEIN", "Check the calendar",
          "You work in a great place, stop asking!", "How come your existence revolve around a day that is not today?",
          "Nope.", ":sadpanda:", ":lipssealed:")
 
-  val triggerWords = List("friday", "fredag", "vrijdag", "reede", "perjantai", "freitag", "föstudagur", "jumat",
-                          "venerdì", "piątek", "vineri", "viernes")
+  val triggerWords =
+    List("friday", "fredag", "vrijdag", "reede", "perjantai", "freitag", "föstudagur", "jumat", "venerdì", "piątek",
+         "vineri", "viernes", "الجمعة", "petak")
 
-  override def help(channel: String): OutboundMessage =
-    OutboundMessage(channel,
-      s"$name will help you to know whether it is friday or not \\n" +
-      "Usage: call on the bot and include friday in the message")
-
-  def trigger(msg: String): Boolean = {
+ def trigger(msg: String): Boolean = {
     val stripped = msg.replace("?", "").replace("!", "").replace(".", "").replace(",", "")
     triggerWords.contains(stripped.toLowerCase)
   }
@@ -35,6 +32,7 @@ class Friday(override val bus: MessageEventBus) extends AbstractBot {
   }
 
   def resultMessage(): String = {
+    val r = scala.util.Random
     if(isFriday()) fridayMessages(r.nextInt(fridayMessages.length))
     else           sadMessages(r.nextInt(sadMessages.length))
   }
@@ -49,18 +47,16 @@ class Friday(override val bus: MessageEventBus) extends AbstractBot {
     else "It is " + not + "friday... " + resultMessage()
   }
 
+  override def help(channel: String): OutboundMessage =
+    OutboundMessage(channel, "Say `Friday` in your mother tongue and it will trigger a friday check")
+
   override def act: Receive = {
+    // Checks whether the message contains any trigger word
     case Command(command, args, message) if (command :: args).foldLeft(false)((acc, c) => acc || trigger(c)) && message.ts != lastTs =>
       lastTs = message.ts //TODO: Fix ugly hack to remove duplicate answers
       val notNumber = (command :: args).foldLeft(0)((acc, c) => acc + (if(c.toLowerCase == "not") 1 else 0))
       val result = if(notNumber > 0) notMessage(notNumber) else resultMessage()
       val response = OutboundMessage(message.channel, s"$result")
-
-      publish(response)
-
-    case Command("help", _, message) =>
-      val helpMsg = "Say `Friday` in your mother tongue and it will trigger a friday check"
-      val response = OutboundMessage(message.channel, s"$helpMsg")
 
       publish(response)
   }

@@ -1,11 +1,11 @@
 import akka.actor.{ActorRef, ActorContext, Props, ActorSystem}
 import io.scalac.slack.api.{BotInfo, Start}
-import io.scalac.slack.bots.system.{HelpBot, CommandsRecognizerBot}
+import io.scalac.slack.bots.system.CommandsRecognizerBot
 import io.scalac.slack.common.actors.SlackBotActor
 import io.scalac.slack.common.{UsersStorage, Shutdownable}
 import io.scalac.slack.{Config => SlackConfig, BotModules, MessageEventBus}
 import io.scalac.slack.websockets.{WebSocket, WSActor}
-import modules.{Friday, Calc}
+import modules.{UrlSaver, Friday, Calc, Help}
 
 object BotRunner extends Shutdownable {
   val system = ActorSystem("SlackBotSystem")
@@ -42,9 +42,10 @@ object BotRunner extends Shutdownable {
   class DelvianBundle() extends BotModules {
     override def registerModules(context: ActorContext, websocketClient: ActorRef) = {
       context.actorOf(Props(classOf[CommandsRecognizerBot], eventBus), "commandProcessor")
-      //context.actorOf(Props(classOf[HelpBot], eventBus), "helpBot")
-      context.actorOf(Props(classOf[Friday], eventBus), "modules.Friday")
-      context.actorOf(Props(classOf[Calc], eventBus), "modules.Calc")
+      context.actorOf(Props(classOf[Help], eventBus), "help")
+      context.actorOf(Props(classOf[Friday], eventBus), "Friday")
+      context.actorOf(Props(classOf[Calc], eventBus), "Calc")
+      context.actorOf(Props(classOf[UrlSaver], eventBus), "UrlSaver")
     }
   }
 }
