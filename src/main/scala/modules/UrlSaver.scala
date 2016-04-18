@@ -1,8 +1,8 @@
 package modules
 
-import io.scalac.slack.MessageEventBus
+import io.scalac.slack.{common, MessageEventBus}
 import io.scalac.slack.bots.AbstractBot
-import io.scalac.slack.common.{DirectMessage, Command, OutboundMessage}
+import io.scalac.slack.common.{DirectMessage, Command, OutboundMessage, UserInfo}
 import java.io._
 import scala.io.Source
 import scala.language.postfixOps
@@ -23,7 +23,8 @@ class UrlSaver(override val bus: MessageEventBus) extends AbstractBot {
 
   val helpMsg =
     "`$url add url key(s)` saves the url with the key(s) as lookup keys\\n" +
-    "`$url key` gets the urls associated with the key"
+    "`$url key(s)` gets the urls associated with the key\\n" +
+    "`$url key(s) @user` gets the urls associated with the key and tags user"
 
   def writeUrl(keys: List[String], url: String): String = {
     val file = new File(filename)
@@ -84,9 +85,11 @@ class UrlSaver(override val bus: MessageEventBus) extends AbstractBot {
       println(message + listUrls())
       publish(DirectMessage(message.user, listUrls()))
 
+    // Handles fething of urls and tags user if it is last argument
     case Command("url", keys, message) =>
       val key = if(keys.head == "get") keys(1) else keys.head
-      val response = OutboundMessage(message.channel, readUrl(key))
+      val builtMessage = if(keys.last.contains("@U")) keys.last + ": " + readUrl(key) else readUrl(key)
+      val response = OutboundMessage(message.channel, builtMessage)
 
       publish(response)
   }
