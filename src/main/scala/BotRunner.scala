@@ -5,7 +5,7 @@ import io.scalac.slack.common.actors.SlackBotActor
 import io.scalac.slack.common.{UsersStorage, Shutdownable}
 import io.scalac.slack.{Config => SlackConfig, BotModules, MessageEventBus}
 import io.scalac.slack.websockets.{WebSocket, WSActor}
-import modules.{UrlSaver, Friday, Calc, Help}
+import modules._
 
 object BotRunner extends Shutdownable {
   val system = ActorSystem("SlackBotSystem")
@@ -46,6 +46,7 @@ object BotRunner extends Shutdownable {
       context.actorOf(Props(classOf[Friday], eventBus), "friday")
       context.actorOf(Props(classOf[Calc], eventBus), "calc")
       context.actorOf(Props(classOf[UrlSaver], eventBus), "url")
+      context.actorOf(Props(classOf[Holiday], eventBus), "holiday")
     }
   }
 }

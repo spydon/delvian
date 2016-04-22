@@ -1,18 +1,15 @@
 package modules
 
-import io.scalac.slack.{common, MessageEventBus}
-import io.scalac.slack.bots.AbstractBot
-import io.scalac.slack.common.{DirectMessage, Command, OutboundMessage, UserInfo}
 import java.io._
-import scala.io.Source
-import scala.language.postfixOps
 
 import akka.util.Timeout
+import io.scalac.slack.MessageEventBus
+import io.scalac.slack.bots.AbstractBot
+import io.scalac.slack.common.{Command, DirectMessage, OutboundMessage}
 
 import scala.concurrent.duration._
+import scala.io.Source
 import scala.language.postfixOps
-
-
 
 class UrlSaver(override val bus: MessageEventBus) extends AbstractBot {
   val filename = "urls.txt"
@@ -47,6 +44,7 @@ class UrlSaver(override val bus: MessageEventBus) extends AbstractBot {
           urls += " " + url
         }
       }
+
       if(urls != "") urls.stripPrefix(" ").replace(" ", "\\n")
       else "No such url found :neutral_face:"
     } catch {

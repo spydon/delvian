@@ -53,6 +53,7 @@ class Friday(override val bus: MessageEventBus) extends AbstractBot {
   override def act: Receive = {
     // Checks whether the message contains any trigger word
     case Command(command, args, message) if (command :: args).foldLeft(false)((acc, c) => acc || trigger(c)) && message.ts != lastTs =>
+      println(DateTime.now)
       lastTs = message.ts //TODO: Fix ugly hack to remove duplicate answers
       val notNumber = (command :: args).foldLeft(0)((acc, c) => acc + (if(c.toLowerCase == "not") 1 else 0))
       val result = if(notNumber > 0) notMessage(notNumber) else resultMessage()

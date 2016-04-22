@@ -1,0 +1,13 @@
+2016-01-01 :: Friday New Years day / Nyårsdagen
+2016-01-06 :: Wednesday Epiphany / Trettondagen
+2016-02-24 :: Thursday The DICE day (only for DICE employees)
+2016-02-25 :: Friday Good Friday / Långfredag
+2016-02-28 :: Monday Easter Monday /Annandag påsk
+2016-05-01 :: Sunday May 1st / Första maj
+2016-05-05 :: Thursday Ascension Day / Kristi himmelfärdsdag
+2016-06-06 :: Monday National Day / Nationaldagen
+2016-06-24 :: Friday Midsummer Eve / Midsommarafton
+2016-12-24 :: Saturday Christmas Eve / Julafton
+2016-12-25 :: Sunday Christmas Day / Juldagen
+2016-12-26 :: Monday Boxing Day / Annandag jul
+2016-12-31 :: Saturday New Years Eve / Nyårsafton
