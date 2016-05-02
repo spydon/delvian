@@ -15,7 +15,7 @@ import scala.concurrent.duration._
 import scala.language.postfixOps
 
 class Holiday(override val bus: MessageEventBus) extends AbstractBot {
-  val filename = "holiday.txt"
+  val filename = "holiday.txt" // TODO: Should use some calender API instead
 
   implicit val timeOut: Timeout = 1 second
 
@@ -30,11 +30,11 @@ class Holiday(override val bus: MessageEventBus) extends AbstractBot {
         val kv = line.split(" :: ")
         val date = DateTime.parse(kv(0))
         val text = kv(1)
-        val daysLeft = (date.getMillis-DateTime.now.getMillis)/1000/86400
-        if(!date.isBeforeNow) return daysLeft + " days left until " + text
+        val daysLeft = Math ceil (date.getMillis-DateTime.now.getMillis)/1000.0/86400.0
+        if(!date.isBeforeNow) return daysLeft.toInt + " days left until " + text
       }
 
-      return "No more holidays found :neutral_face:"
+      "No more holidays found :neutral_face:"
     } catch {
       case ex: FileNotFoundException => "Couldn't find that file."
       case ex: IOException => "Had an IOException trying to read the file"
