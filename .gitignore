@@ -2,4 +2,5 @@
 project/
 target/
 src/main/resources/application.conf
+users.txt
 urls.txt

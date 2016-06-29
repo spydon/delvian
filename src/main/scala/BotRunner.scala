@@ -6,11 +6,12 @@ import io.scalac.slack.common.{UsersStorage, Shutdownable}
 import io.scalac.slack.{Config => SlackConfig, BotModules, MessageEventBus}
 import io.scalac.slack.websockets.{WebSocket, WSActor}
 import modules._
+import modules.admin.Admin
 
 object BotRunner extends Shutdownable {
-  val system = ActorSystem("SlackBotSystem")
+  val system = ActorSystem("DelvianSystem")
   val eventBus = new MessageEventBus
-  val slackBot = system.actorOf(Props(classOf[SlackBotActor], new DelvianBundle(), eventBus, this, None), "slack-bot")
+  val delvianBot = system.actorOf(Props(classOf[SlackBotActor], new DelvianBundle(), eventBus, this, None), "delvian")
 
   var botInfo: Option[BotInfo] = None
 
@@ -19,7 +20,7 @@ object BotRunner extends Shutdownable {
     println("With api key: " + SlackConfig.apiKey)
 
     try {
-      slackBot ! Start
+      delvianBot ! Start
 
       system.awaitTermination()
       println("Shutdown successful...")
@@ -34,7 +35,7 @@ object BotRunner extends Shutdownable {
   sys.addShutdownHook(shutdown())
 
   override def shutdown(): Unit = {
-    slackBot ! WebSocket.Release
+    delvianBot ! WebSocket.Release
     system.shutdown()
     system.awaitTermination()
   }
@@ -47,6 +48,8 @@ object BotRunner extends Shutdownable {
       context.actorOf(Props(classOf[Calc], eventBus), "calc")
       context.actorOf(Props(classOf[UrlSaver], eventBus), "url")
       context.actorOf(Props(classOf[Holiday], eventBus), "holiday")
+      context.actorOf(Props(classOf[Script], eventBus), "script")
+      context.actorOf(Props(classOf[Admin], eventBus), "admin")
     }
   }
 }
