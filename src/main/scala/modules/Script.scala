@@ -46,7 +46,7 @@ class Script(override val bus: MessageEventBus) extends AbstractBot {
     desc.foldLeft(">>>")((lines, line) => lines.concat(line + "\\n"))
   }
 
-  def isScript(name: String): Boolean = (("ls " + workingDir) !!).split("\\n").filter(_.endsWith(suffix)).contains(name)
+  def isScript(name: String): Boolean = (("ls " + workingDir) !!).split("\\n").count(_ == name + suffix) == 1
 
   def runScript(script: String, args: List[String]): Future[String] = {
     val result = Promise[String]

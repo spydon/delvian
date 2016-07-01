@@ -50,6 +50,7 @@ object BotRunner extends Shutdownable {
       context.actorOf(Props(classOf[Holiday], eventBus), "holiday")
       context.actorOf(Props(classOf[Script], eventBus), "script")
       context.actorOf(Props(classOf[Admin], eventBus), "admin")
+      context.actorOf(Props(classOf[Alias], eventBus), "alias")
     }
   }
 }
