@@ -5,7 +5,7 @@ import java.io._
 import akka.util.Timeout
 import io.scalac.slack.MessageEventBus
 import io.scalac.slack.bots.AbstractBot
-import io.scalac.slack.common.{Command, DirectMessage, OutboundMessage}
+import io.scalac.slack.common.{BaseMessage, Command, OutboundMessage}
 
 import scala.concurrent.duration._
 import scala.io.Source
@@ -13,14 +13,13 @@ import scala.language.postfixOps
 
 class Alias(override val bus: MessageEventBus) extends AbstractBot {
   val filename = "alias.txt"
-
-  import context._
+  var lastTs = "" //TODO: Fix ugly hack to remove duplicate answers
 
   implicit val timeOut: Timeout = 1 second
 
   val helpMsg =
     ">>>`$alias` or `$a` creates an alias\\n" +
-    "`$alias name command` saves an alias"
+    "`$alias add name command` saves an alias"
 
   def writeAlias(alias: String, commands: List[String]): String = {
     val file = new File(filename)
@@ -28,20 +27,21 @@ class Alias(override val bus: MessageEventBus) extends AbstractBot {
     val command = commands.mkString(" ")
     bw.write(alias + " :: " + command + "\n")
     bw.close()
-    alias
+    "`" + alias + "` added"
   }
 
   def readAlias(key: String): Option[Array[String]] = {
     try {
+      var commands: Option[Array[String]] = None
       for (line <- Source.fromFile(filename).getLines()) {
         val kv = line.split(" :: ")
         val keys = kv(0).split(" ")
         if(keys(0) == key) {
-          return Some(kv(1).split(" "))
+          commands = Some(kv(1).split(" "))
         }
       }
 
-      return None
+      return commands
     } catch {
       case ex: FileNotFoundException => None
       case ex: IOException => None
@@ -68,10 +68,17 @@ class Alias(override val bus: MessageEventBus) extends AbstractBot {
 
     case Command("alias", List("list"), message) => publish(OutboundMessage(message.channel, listAlias()))
     case Command("a", keys, message) => act(Command("alias", keys, message))
-    case Command(alias, List(), message) =>
+    case Command(alias, List(), message) if message.ts != lastTs =>
+      lastTs = message.ts //TODO: Fix ugly hack to remove duplicate answers
       readAlias(alias) match {
-        case Some(command) => act(Command(command.head, command.tail.toList, message))
-        case None => publish(OutboundMessage(message.channel, s"${message.user}: No such alias found"))
+        case Some(command) =>
+          //val msg = Command(command.head, command.tail.toList, message)
+          // BaseMessage instead of command so that it goes through the CommandRecognizer
+          val msg = BaseMessage("$" + command.mkString(" "), message.channel, message.user, message.ts, message.edited)
+          publish(msg)
+        case None =>
+          println("GOES TO NONE")
+          // Do not publish anything as other commands might be one word
       }
   }
 }
