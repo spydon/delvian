@@ -30,6 +30,27 @@ class Alias(override val bus: MessageEventBus) extends AbstractBot {
     "`" + alias + "` added"
   }
 
+  def deleteAlias(key: String): String = {
+    try {
+      val file = new File(filename)
+      val bw = new BufferedWriter(new FileWriter(file, false))
+      for (line <- Source.fromFile(filename).getLines()) {
+        val kv = line.split(" :: ")
+        val keys = kv(0).split(" ")
+        if(keys(0) != key) {
+          bw.write(line)
+        }
+      }
+
+      bw.close()
+    } catch {
+      case ex: FileNotFoundException => None
+      case ex: IOException => None
+    }
+
+    "`" + key + "` deleted"
+  }
+
   def readAlias(key: String): Option[Array[String]] = {
     try {
       var commands: Option[Array[String]] = None
@@ -64,6 +85,10 @@ class Alias(override val bus: MessageEventBus) extends AbstractBot {
     // Checks whether the message contains any trigger word
     case Command("alias", "add" :: alias :: command, message) =>
       val response = OutboundMessage(message.channel, writeAlias(alias, command))
+      publish(response)
+
+    case Command("alias", "delete" :: List(key), message) =>
+      val response = OutboundMessage(message.channel, deleteAlias(key))
       publish(response)
 
     case Command("alias", List("list"), message) => publish(OutboundMessage(message.channel, listAlias()))

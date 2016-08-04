@@ -14,7 +14,8 @@ class Admin(override val bus: MessageEventBus) extends AbstractBot {
 
   val helpMsg =
     "`$admin` handles the users that have access to higher privilege\\n" +
-    "`$admin @user` gives the user privilege"
+    "`$admin @user` gives the user privilege\\n" +
+    "`$admin del @user1 ... @userX` removes the user privilege"
 
   override def help(channel: String): OutboundMessage = OutboundMessage(channel, helpMsg)
 

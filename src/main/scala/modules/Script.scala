@@ -67,7 +67,7 @@ class Script(override val bus: MessageEventBus) extends AbstractBot {
         publish(OutboundMessage(message.channel, "Started running script: `" + keys.head + "`"))
         Future {
           runScript(keys.head, keys.tail).onComplete {
-            case Success(result) => publish(OutboundMessage(message.channel, s"<@${message.user}>: $result"))
+            case Success(result) => publish(OutboundMessage(message.channel, s"$result - Ping <@${message.user}>"))
             case Failure(e) => publish(OutboundMessage(message.channel, "Something failed"))
           }
         }
