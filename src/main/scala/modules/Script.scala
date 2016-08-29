@@ -62,12 +62,14 @@ class Script(override val bus: MessageEventBus) extends AbstractBot {
     case Command("script", List("list"), message) =>
       publish(OutboundMessage(message.channel, listScripts()))
 
-    case Command("script", keys, message) =>
+    case Command("script", rawKeys, message) =>
       if(AdminUtil.hasAccess(message.user)) {
-        publish(OutboundMessage(message.channel, "Started running script: `" + keys.head + "`"))
+        val (user, keys) = if(rawKeys.last.contains("@U")) (rawKeys.last, rawKeys.dropRight(1))
+                           else ("<@"+message.user+">", rawKeys)
+        publish(OutboundMessage(message.channel, "Started running script: `" + keys.mkString(" ") + "`"))
         Future {
           runScript(keys.head, keys.tail).onComplete {
-            case Success(result) => publish(OutboundMessage(message.channel, s"$result - Ping <@${message.user}>"))
+            case Success(result) => publish(OutboundMessage(message.channel, s"$result - Ping ${user}"))
             case Failure(e) => publish(OutboundMessage(message.channel, "Something failed"))
           }
         }

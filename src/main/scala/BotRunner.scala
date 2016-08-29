@@ -45,7 +45,6 @@ object BotRunner extends Shutdownable {
       context.actorOf(Props(classOf[CommandsRecognizerBot], eventBus), "commandProcessor")
       context.actorOf(Props(classOf[Help],                  eventBus), "help")
       context.actorOf(Props(classOf[Friday],                eventBus), "friday")
-      context.actorOf(Props(classOf[Calc],                  eventBus), "calc")
       context.actorOf(Props(classOf[UrlSaver],              eventBus), "url")
       context.actorOf(Props(classOf[Holiday],               eventBus), "holiday")
       context.actorOf(Props(classOf[Script],                eventBus), "script")
