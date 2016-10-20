@@ -44,7 +44,10 @@ object BotRunner extends Shutdownable {
     override def registerModules(context: ActorContext, websocketClient: ActorRef) = {
       context.actorOf(Props(classOf[CommandsRecognizerBot], eventBus), "commandProcessor")
       context.actorOf(Props(classOf[Help],                  eventBus), "help")
+      context.actorOf(Props(classOf[Amandine],              eventBus), "amandine")
+      context.actorOf(Props(classOf[Jari],                  eventBus), "jari")
       context.actorOf(Props(classOf[Friday],                eventBus), "friday")
+      context.actorOf(Props(classOf[Bet],                   eventBus), "bet")
       context.actorOf(Props(classOf[UrlSaver],              eventBus), "url")
       context.actorOf(Props(classOf[Holiday],               eventBus), "holiday")
       context.actorOf(Props(classOf[Script],                eventBus), "script")
