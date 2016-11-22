@@ -66,7 +66,8 @@ class Bet(override val bus: MessageEventBus) extends AbstractBot {
       publish(response)
 
      case Command("bet", bet, message) =>
-      val response = OutboundMessage(message.channel, writeBet(bet.head, message.user))
+       //val response = OutboundMessage(message.channel, writeBet(bet.head, message.user))
+      val response = OutboundMessage(message.channel, "Betting is closed, winner will be announced on the next friday meeting")
       publish(response)
   }
 

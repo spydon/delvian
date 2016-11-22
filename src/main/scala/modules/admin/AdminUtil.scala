@@ -9,7 +9,8 @@ import scala.io.Source
 import scala.language.postfixOps
 
 object AdminUtil {
-  val filename = "users.txt"
+  private val filename = "users.txt"
+  private val lowAccessScript = List("psu")
 
   def addUser(user: String, admin: String): String = {
     if(hasAccess(admin)) {
@@ -24,6 +25,7 @@ object AdminUtil {
   }
 
   def deleteUser(user: String, admin: String): String = {
+
     if(hasAccess(admin)) {
       val admins = Source.fromFile(filename).getLines()
       val file = new File(filename)
@@ -37,6 +39,7 @@ object AdminUtil {
   }
 
   def hasAccess(user: String): Boolean = Source.fromFile(filename).getLines().contains(s"<@$user>")
+  def lowAccess(script: String): Boolean = lowAccessScript.contains(script)
 
   def listAdmins(): String = {
     try {

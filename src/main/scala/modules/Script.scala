@@ -50,7 +50,8 @@ class Script(override val bus: MessageEventBus) extends AbstractBot {
 
   def runScript(script: String, args: List[String]): Future[String] = {
     val result = Promise[String]
-    val p = "/bin/sh " + workingDir + script + suffix + args.mkString(" ", " ", "")
+    val p = workingDir + script + suffix + args.mkString(" ", " ", "")
+    println(p)
     if(isScript(script)) result.success(escapeJava(p).!!.filter(_ >= ' ').trim)
     else result.success(s"`$script` does not exist")
     result.future
@@ -63,7 +64,7 @@ class Script(override val bus: MessageEventBus) extends AbstractBot {
       publish(OutboundMessage(message.channel, listScripts()))
 
     case Command("script", rawKeys, message) =>
-      if(AdminUtil.hasAccess(message.user)) {
+      if(AdminUtil.lowAccess(rawKeys.head) || AdminUtil.hasAccess(message.user)) {
         val (user, keys) = if(rawKeys.last.contains("@U")) (rawKeys.last, rawKeys.dropRight(1))
                            else ("<@"+message.user+">", rawKeys)
         publish(OutboundMessage(message.channel, "Started running script: `" + keys.mkString(" ") + "`"))
