@@ -17,7 +17,7 @@ import sys.process._
 import org.apache.commons.lang3.StringEscapeUtils.escapeJava
 
 class Script(override val bus: MessageEventBus) extends AbstractBot {
-  val workingDir = ConfigFactory.load().getString("script_path")
+  val workingDir = ConfigFactory.load().getString("path.scripts")
   val suffix = ".dsh"
   val lineFormat = "#d "
 
