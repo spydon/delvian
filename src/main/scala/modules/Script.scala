@@ -1,9 +1,10 @@
 package modules
 
 import akka.util.Timeout
+import com.typesafe.config.ConfigFactory
 import io.scalac.slack.MessageEventBus
 import io.scalac.slack.bots.AbstractBot
-import io.scalac.slack.common.{Command, OutboundMessage, IncomingMessage}
+import io.scalac.slack.common.{Command, OutboundMessage}
 import modules.admin.AdminUtil
 
 import scala.concurrent._
@@ -13,11 +14,10 @@ import scala.io.Source
 import scala.language.postfixOps
 import scala.util.{Failure, Success}
 import sys.process._
-
 import org.apache.commons.lang3.StringEscapeUtils.escapeJava
 
 class Script(override val bus: MessageEventBus) extends AbstractBot {
-  val workingDir = "/home/spydon/scripts/" // TODO: Read from application.conf
+  val workingDir = ConfigFactory.load().getString("script_path")
   val suffix = ".dsh"
   val lineFormat = "#d "
 
