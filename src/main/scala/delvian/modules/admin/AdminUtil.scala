@@ -1,4 +1,4 @@
-package modules.admin
+package delvian.modules.admin
 
 import java.io._
 

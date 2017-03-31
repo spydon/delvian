@@ -1,4 +1,4 @@
-package modules.admin
+package delvian.modules.admin
 
 import akka.util.Timeout
 import io.scalac.slack.MessageEventBus

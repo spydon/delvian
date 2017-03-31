@@ -1,4 +1,4 @@
-package modules
+package delvian.modules
 
 import io.scalac.slack.{common, MessageEventBus}
 import io.scalac.slack.bots.AbstractBot

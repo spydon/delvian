@@ -1,4 +1,4 @@
-package modules
+package delvian.modules
 
 import java.io._
 
@@ -24,7 +24,7 @@ class Jari(override val bus: MessageEventBus) extends AbstractBot {
   def writeJoke(joke: String): String = {
     val file = new File(filename)
     val bw = new BufferedWriter(new FileWriter(file, true))
-    bw.write(s"${joke.replace("\n", "\\n")}\n")
+    bw.write(s"${joke.replace("\n", "\\n").replace("\"","\\\"")}\n")
     bw.close()
     "Stupid joke saved... :expressionless:"
   }

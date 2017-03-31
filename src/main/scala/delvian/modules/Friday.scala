@@ -1,14 +1,17 @@
-package modules
+package delvian.modules
 
 import io.scalac.slack.MessageEventBus
 import io.scalac.slack.bots.AbstractBot
 import io.scalac.slack.common.{Command, OutboundMessage}
 import org.joda.time.DateTime
 
-class Amandine(override val bus: MessageEventBus) extends AbstractBot {
+class Friday(override val bus: MessageEventBus) extends AbstractBot {
   var lastTs = "" //TODO: Fix ugly hack to remove duplicate answers
   val fridayMessages =
-    List(":chocolatecroissant: ")
+    List("IT IS!!!", "Trevlig helg :partyparrot:", "Friday, it is! :yoda:", "Have a great weekend",
+         "See you on monday!", ":beers:", ":rebeccablack:", ":partyparrot:", ":party:",
+         "Yup! What are you going to do with all that free time?!", "Damn right it is! :smile:", "JAA, DAS IST KLAR!",
+         "Do you want it to be friday? In that case I guess it is.")
 
   val sadMessages =
     List("Trevlig vardag", "Unfortunately not", "Doesn't matter...", "Still a bit to go", "NEIN", "Check the calendar",
@@ -16,7 +19,8 @@ class Amandine(override val bus: MessageEventBus) extends AbstractBot {
          "Nope.", ":sadpanda:", ":lipssealed:")
 
   val triggerWords =
-    List("amandine", "frenchie", "frenchie's", "french", "frenchies", "amandine's", "amandines")
+    List("friday", "fredag", "vrijdag", "reede", "perjantai", "freitag", "föstudagur", "jumat", "venerdì", "piątek",
+         "vineri", "viernes", "الجمعة", "petak")
 
  def trigger(msg: String): Boolean = {
     val stripped = msg.replace("?", "").replace("!", "").replace(".", "").replace(",", "")
@@ -24,7 +28,7 @@ class Amandine(override val bus: MessageEventBus) extends AbstractBot {
   }
 
   def isFriday(): Boolean = {
-    true
+    DateTime.now.dayOfWeek.get == 5
   }
 
   def resultMessage(): String = {

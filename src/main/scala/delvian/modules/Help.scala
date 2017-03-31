@@ -1,4 +1,4 @@
-package modules
+package delvian.modules
 
 import io.scalac.slack.MessageEventBus
 import io.scalac.slack.bots.system.HelpBot

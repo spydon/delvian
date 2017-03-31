@@ -1,11 +1,11 @@
-package modules
+package delvian.modules
 
 import akka.util.Timeout
 import com.typesafe.config.ConfigFactory
 import io.scalac.slack.MessageEventBus
 import io.scalac.slack.bots.AbstractBot
 import io.scalac.slack.common.{Command, OutboundMessage}
-import modules.admin.AdminUtil
+import delvian.modules.admin.AdminUtil
 
 import scala.concurrent._
 import scala.concurrent.duration._

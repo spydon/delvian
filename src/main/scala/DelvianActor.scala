@@ -1,3 +1,5 @@
+package delvian
+
 import java.util.concurrent.TimeUnit
 
 import akka.actor.{ActorRef, Actor, ActorLogging, Props}
@@ -8,7 +10,11 @@ import io.scalac.slack.websockets.WebSocket
 
 import scala.concurrent.duration._
 
-class DelvianActor(modules: BotModules, eventBus: MessageEventBus, websocketClient: ActorRef) extends Actor with ActorLogging {
+class DelvianActor(
+    modules: BotModules,
+    eventBus: MessageEventBus,
+    websocketClient: ActorRef)
+  extends Actor with ActorLogging {
 
   import context.{dispatcher, system}
 
